@@ -5,7 +5,7 @@ import os
 
 def attack(name, weapon, item, charged, enemy_hp):
     critical_hit = False
-    total_damage = weapon.get_damage() + random.randint(-2, 2)
+    total_damage = weapon.get_damage() + random.randint(-2, 5)
     if charged == True:
         total_damage *= 1.5
     if item != None:
@@ -17,9 +17,9 @@ def attack(name, weapon, item, charged, enemy_hp):
                 critical_hit = True
                 total_damage *= 2
     enemy_hp -= total_damage
-    print(name + " attacks with " + weapon.get_name() + " and deals " + str(total_damage) + " damage.")
+    print(name + " attacks with a " + weapon.get_name() + " and deals " + str(total_damage) + " damage.")
     if critical_hit == True: 
-        print(" Critical hit!")
+        print("Critical hit!")
     return enemy_hp
 
 

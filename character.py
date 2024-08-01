@@ -3,11 +3,11 @@ import random
 
 class Character():
 
-    def __init__(self, character_name, character_weapon, character_max_health):
+    def __init__(self, character_name, character_weapon, character_max_hp):
         self.name = character_name
         self.weapon = character_weapon
         self.item = None
-        self.max_health = character_max_health
+        self.max_hp = character_max_hp
 
     def get_name(self):
         return self.name
@@ -28,13 +28,13 @@ class Character():
         self.item = item
     
     def get_max_hp(self):
-        return self.max_health
+        return self.max_hp
     
     def char_describe(self):
         print("\nRoom Character:")
         print(self.name + " is here.")
 
-    def generate_enemy(self, name_pool, weapon_pool, health):
+    def generate_enemy(self, name_pool, weapon_pool, enemy_max_hp):
         self.name = random.choice(name_pool)
         self.weapon = random.choice(weapon_pool)
-        self.max_health = health
+        self.max_hp = enemy_max_hp

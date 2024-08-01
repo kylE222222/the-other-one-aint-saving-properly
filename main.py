@@ -47,7 +47,6 @@ cafeteria.link_room(left_hall_a, "south")
 
 supply_room.link_room(left_hall_b, "east")
 
-
 #Room Linking: Right Side (Up to Main Room)
 right_hall_a.link_room(right_hall_b, "north")
 right_hall_a.link_room(outside, "south")
@@ -71,7 +70,6 @@ training_area.link_room(right_hall_b, "west")
 
 security_room.link_room(right_hall_c, "south")
 
-
 #Room Linking: Miscellaneous
 outside.link_room(right_hall_a, "north-east")
 outside.link_room(left_hall_a, "north-west")
@@ -85,108 +83,102 @@ data_room.link_room(main_room, "south")
 
 #Item Instantiation
 data_crystal = Item("data crystal", "A capsule containg intel on enemy plans and tactics")
-data_room.set_item(data_crystal)
 disguise = Item("disguise", "Blend in with the opposition")
-supply_room.set_item(disguise)
 flashlight = Item("flashlight", "Light up the surrounding area")
 bomb = Item("bomb", "Explosive!")
-security_room.set_item(bomb)
-
 
 #Item Subclass: Weapon
-fists = Weapon("fists", None, 5)
-knife = Weapon("knife", None, random.randint(3,4))
-bat = Weapon("knife", None, random.randint(3,4))
-shovel = Weapon("shovel", None, random.randint(3,4))
-sword = Weapon("sword", None, random.randint(3,4))
-
+fists = Weapon("fists", None, 10)
+knife = Weapon("knife", None, random.randint(15, 18))
+bat = Weapon("knife", None, random.randint(20, 22))
+shovel = Weapon("shovel", None, random.randint(25, 28))
+sword = Weapon("sword", None, random.randint(30, 32))
 
 #Item Subclass: Heal
-banana = Heal("banana", "Restores 5 HP", 10)
-medkit = Heal("medkit", "Restores 20 HP", 10)
-
+banana = Heal("banana", "Restores 10 HP", 10)
+medkit = Heal("medkit", "Restores 50 HP", 50)
 
 #Item Subclass: Support
 shield_blocking_time_buff = round(random.uniform(0.1, 0.25),2)
 shield = Support("shield", "Increases number visibility time by " + str(shield_blocking_time_buff) + "s when blocking", "blocking_time", shield_blocking_time_buff) 
-lucky_charm_crit_boost = random.randint(1, 10)
-lucky_charm = Support("lucky charm", "Provides a critical hit chance of " + str(lucky_charm_crit_boost) + "%)", "crit_rate", lucky_charm_crit_boost)
-combat_vest_hp_buff = random.randint(5, 10)
+lucky_charm_crit_boost = random.randint(10, 20)
+lucky_charm = Support("lucky charm", "Provides a critical hit rate of " + str(lucky_charm_crit_boost) + "%)", "crit_rate", lucky_charm_crit_boost)
+combat_vest_hp_buff = random.randint(50, 75)
 combat_vest = Support("combat vest", "Increases max health by " + str(combat_vest_hp_buff), "health", combat_vest_hp_buff)
-tactical_glove_dmg_buff = random.randint(1, 3)
+tactical_glove_dmg_buff = random.randint(8, 12)
 tactical_glove = Support("tactical glove", "Increases damage by " + str(tactical_glove_dmg_buff), "damage", tactical_glove_dmg_buff)
 
 
-#putting item in room
+#Placing Items into Rooms
+#Set Spawn Locations
+data_room.set_item(data_crystal)
+supply_room.set_item(disguise)
+security_room.set_item(bomb)
+
+#Randomised Spawn Locations
+#This list contains all the rooms that can contain random items. The following are not included: outside, supply_room, data_room and hidden_room.
+item_rooms = [cafeteria, bathroom, vents, main_room, training_area, security_room, left_hall_a, left_hall_b, left_hall_c, right_hall_a, right_hall_b, right_hall_c, right_hall_d]
+#This list contains all the items that have a chance to spawn.
+item_pool = [flashlight, banana, medkit, shield, lucky_charm, combat_vest, tactical_glove]
 for room in item_rooms:
     room_item_chance = random.randint(0,1)
     if room_item_chance == 1:
-        if len(item_pool) > 0:
-            random_item = random.choice(item_pool)
-            item_pool.remove(random_item)
-            room.set_item(random_item)
+        room.set_item(random.choice(item_pool))
 
-#Character Instantiation
-enemy = Enemy(None, None, None)
-security_guard = Enemy("security guard", fists, 20)
+
+#Character Instantiation (and Other Things Relevant to the Object)
+enemy = Character(None, None, None)
+
+#GIVE THIS SECURITY GUARD A NAME, MAYBE GIVE THE ENEMIES A RANDOM RANK
+security_guard = Character("Security Guard", knife, 150)
 security_room.set_character(security_guard)
+security_active = True
+alarm = False
 
-#tidy this up, maybe have less things
-os.system("printf '\033c'") 
-player_name = input("Enter your character's name: ")
-player = Character(player_name, fists, 20)
+player = Character(None, fists, 250)
 player_max_hp = player.get_max_hp()
 player_hp = player_max_hp
 bag = []
+disguised = False
+current_room = outside
+force_fight = False
 
 
-# Pools
+#These lists are for various uses in the main program
 weapon_pool = [knife, bat, shovel, sword]
-item_pool = [banana, medkit, shield, lucky_charm, vest, gloves, flashlight]
-#rooms not included: outside, supply_room, data_room, hidden_room
-item_rooms = [cafeteria, bathroom, vents, main_room, training_area, security_room, left_hall_a, left_hall_b, left_hall_c, right_hall_a, right_hall_b, right_hall_c, right_hall_d]
-
 vent_exits = [cafeteria, right_hall_b, main_room]
 bomb_rooms = [left_hall_c, main_room]
 directions = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west"]
 encounterless_rooms = [outside, vents, security_room, hidden_room]
 
-current_room = outside
-disguised = False
-security_active = True #disable by killing security guard
-alarm = False #INTEL STOLEN -> ALARM = true (if security is active)
-#for security active, maybe just use isinstance to check if an enemy is in security room
-#(only securit guard can be in security room)
-force_fight = False #always true when alarm is true
-
 
 #MAIN PROCESS
 os.system("printf '\033c'")
-print("Hello " + player_name + ".")
-print("You have been tasked to steal a valuable asset from an enemy base: the [DATA CRYSTAL].")
-print("Navigate through the base to find and steal this [DATA CRYSTAL].")
-print("The base is filled with enemies. Do what you must to get past.")
+player_name = input("Enter your character's name: ")
+player.set_name(player_name)
+
+os.system("printf '\033c'")
+print("Hello " + player.get_name() + ".")
+print("You have been tasked to steal a valuable asset from an enemy base: the data crystal.")
+print("Navigate through the base to find and steal it.")
 print("Good luck.")
 print("\nPress enter to begin")
 input('')
 
-#the below works in pycharm but not in github...
+#For PyCharm
 """print("Loading", end = '')
 time.sleep(1)
 for i in range(0,3):
     print(".", end = '')
     time.sleep(1)"""
 
-#github alternative
+#For Github
 loading = "Loading"
 for i in range(0,4):
     os.system("printf '\033c'") 
     print(loading)
     loading = loading + "."
     time.sleep(1)
-
-
-#HIDDEN ROOM BOSS FIGHTT?
 
 while player_hp > 0:
     os.system("printf '\033c'")
@@ -500,3 +492,4 @@ while player_hp > 0:
 if in_hidden == True:
     pass
     #whatever, make a boss fight
+    #fight glitched enemies to make it to my room or smth idk
