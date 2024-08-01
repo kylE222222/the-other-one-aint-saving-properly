@@ -23,7 +23,7 @@ hidden_room = Room("???", "A dark presence fills the room.")
 
 left_hall_a = Room("Left Hall A", None)
 left_hall_b = Room("Left Hall B", None)
-left_hall_c = Room("Left Hall C", "A barrier blocks the way to the Main Room")
+left_hall_c = Room("Left Hall C", "A particularly explodable barrier blocks the way north.")
 
 right_hall_a = Room("Right Hall A", None)
 right_hall_b = Room("Right Hall B", None)
@@ -31,7 +31,7 @@ right_hall_c = Room("Right Hall C", None)
 right_hall_d = Room("Right Hall D", None)
 
 
-#Room Linking: Left Side (Up to the main room)
+#Room Linking: Left Side (Up to Main Room)
 left_hall_a.link_room(cafeteria, "north")
 left_hall_a.link_room(outside, "south")
 left_hall_a.link_room(left_hall_b, "west")
@@ -48,7 +48,7 @@ cafeteria.link_room(left_hall_a, "south")
 supply_room.link_room(left_hall_b, "east")
 
 
-#Room Linking: Right Side (Up to the main room)
+#Room Linking: Right Side (Up to Main Room)
 right_hall_a.link_room(right_hall_b, "north")
 right_hall_a.link_room(outside, "south")
 right_hall_a.link_room(bathroom, "west")
@@ -77,46 +77,54 @@ outside.link_room(right_hall_a, "north-east")
 outside.link_room(left_hall_a, "north-west")
 
 main_room.link_room(data_room, "north")
-main_room.link_room(right_hall_d, "north-east")
+main_room.link_room(right_hall_d, "east")
 main_room.link_room(vents, "south-east")
 
 data_room.link_room(main_room, "south")
 
 
 #Item Instantiation
-data_crystal = Item("[DATA CRYSTAL]", "A capsule containg intel on enemy plans and tactics.")
+data_crystal = Item("data crystal", "A capsule containg intel on enemy plans and tactics")
 data_room.set_item(data_crystal)
-disguise = Item("[DISGUISE]", "Blend in with the opposition.")
+disguise = Item("disguise", "Blend in with the opposition")
 supply_room.set_item(disguise)
-flashlight = Item("[FLASHLIGHT]", "Light up the surrounding area.")
-bomb = Item("[BOMB]", "Explosive!")
+flashlight = Item("flashlight", "Light up the surrounding area")
+bomb = Item("bomb", "Explosive!")
 security_room.set_item(bomb)
-#use bomb in right hall c to open the secret!
 
 
 #Item Subclass: Weapon
-fists = Weapon("[FISTS]", None, 2)
-knife = Weapon("[KNIFE]", None, random.randint(3,4))
-bat = Weapon("[BAT]", None, random.randint(3,4))
-shovel = Weapon("[SHOVEL]", None, random.randint(3,4))
-sword = Weapon("[SWORD]", None, random.randint(3,4))
+fists = Weapon("fists", None, 5)
+knife = Weapon("knife", None, random.randint(3,4))
+bat = Weapon("knife", None, random.randint(3,4))
+shovel = Weapon("shovel", None, random.randint(3,4))
+sword = Weapon("sword", None, random.randint(3,4))
 
 
 #Item Subclass: Heal
-banana = Heal("[BANANA]", "Restores 1 HP", 10)
-medkit = Heal("[MEDKIT]", "Restores 5 HP", 10)
+banana = Heal("banana", "Restores 5 HP", 10)
+medkit = Heal("medkit", "Restores 20 HP", 10)
 
 
 #Item Subclass: Support
 shield_blocking_time_buff = round(random.uniform(0.1, 0.25),2)
-shield = Support("[SHIELD]", "Increases the amount of time the numbers stay on screen by " + str(shield_blocking_time_buff) + "s", "blocking_time", shield_blocking_time_buff) 
+shield = Support("shield", "Increases number visibility time by " + str(shield_blocking_time_buff) + "s when blocking", "blocking_time", shield_blocking_time_buff) 
 lucky_charm_crit_boost = random.randint(1, 10)
-lucky_charm = Support("[LUCKY CHARM]", "Provides a crit rate of " + str(lucky_charm_crit_boost) + "%", "crit_rate", lucky_charm_crit_boost)
-armour_hp_buff = random.randint(3, 5)
-vest = Support("[VEST]", "Increases your max health by " + str(armour_hp_buff), "health", armour_hp_buff)
-gloves_dmg_buff = random.randint(1,3)
-gloves = Support("[GLOVE]", "Increases your damage by " + str(gloves_dmg_buff), "damage", gloves_dmg_buff)
+lucky_charm = Support("lucky charm", "Provides a critical hit chance of " + str(lucky_charm_crit_boost) + "%)", "crit_rate", lucky_charm_crit_boost)
+combat_vest_hp_buff = random.randint(5, 10)
+combat_vest = Support("combat vest", "Increases max health by " + str(combat_vest_hp_buff), "health", combat_vest_hp_buff)
+tactical_glove_dmg_buff = random.randint(1, 3)
+tactical_glove = Support("tactical glove", "Increases damage by " + str(tactical_glove_dmg_buff), "damage", tactical_glove_dmg_buff)
 
+
+#putting item in room
+for room in item_rooms:
+    room_item_chance = random.randint(0,1)
+    if room_item_chance == 1:
+        if len(item_pool) > 0:
+            random_item = random.choice(item_pool)
+            item_pool.remove(random_item)
+            room.set_item(random_item)
 
 #Character Instantiation
 enemy = Enemy(None, None, None)
@@ -150,16 +158,6 @@ alarm = False #INTEL STOLEN -> ALARM = true (if security is active)
 #for security active, maybe just use isinstance to check if an enemy is in security room
 #(only securit guard can be in security room)
 force_fight = False #always true when alarm is true
-
-
-#putting item in room
-for room in item_rooms:
-    room_item_chance = random.randint(0,1)
-    if room_item_chance == 1:
-        if len(item_pool) > 0:
-            random_item = random.choice(item_pool)
-            item_pool.remove(random_item)
-            room.set_item(random_item)
 
 
 #MAIN PROCESS

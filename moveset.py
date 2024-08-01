@@ -5,7 +5,7 @@ import os
 
 def attack(name, weapon, item, charged, enemy_hp):
     critical_hit = False
-    total_damage = weapon.get_damage() + random.randint(-1, 1)
+    total_damage = weapon.get_damage() + random.randint(-2, 2)
     if charged == True:
         total_damage *= 1.5
     if item != None:

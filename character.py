@@ -12,6 +12,9 @@ class Character():
     def get_name(self):
         return self.name
 
+    def set_name(self, name):
+        self.name = name
+
     def get_weapon(self):
         return self.weapon
     
@@ -31,12 +34,6 @@ class Character():
         print("\nRoom Character:")
         print(self.name + " is here.")
 
-
-class Enemy(Character):
-
-    def __init__(self, character_name, character_weapon, character_max_health):
-        super().__init__(character_name, character_weapon, character_max_health)
-    
     def generate_enemy(self, name_pool, weapon_pool, health):
         self.name = random.choice(name_pool)
         self.weapon = random.choice(weapon_pool)
