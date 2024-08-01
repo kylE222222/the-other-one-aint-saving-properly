@@ -226,7 +226,7 @@ while player_hp > 0:
                 if alarm == True:
                     encounter_chance = 1
                 if encounter_chance == 1:
-                    enemy.generate_enemy(get_name_pool(), weapon_pool, random.randint(1,2))
+                    enemy.generate_enemy(get_name_pool(), weapon_pool, random.randint(100,125))
                     current_room.set_character(enemy)
                     room_enemy = current_room.get_character()
                     if disguised == False:
