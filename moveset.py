@@ -23,20 +23,22 @@ def attack(name, weapon, item, charged, enemy_hp):
     return enemy_hp
 
 
-def charge(name):
+def charge(name, rank):
+    if rank != None:
+        print(rank + " ", end = "")
     print(name + " charges up their next attack.")
     return True
 
 
-def block(name, item, user):
+def block(name, rank, item, user):
     if user == "player":
-        number_combination = ""
+        numbers = ""
         os.system("printf '\033c'")
         min = 1
         max = 3
         for i in range(0,3):
             number_generated = random.randint(min,max)
-            number_combination += str(number_generated)
+            numbers += str(number_generated)
             print(number_generated)
             time.sleep(0.2)
             if item != None:
@@ -45,14 +47,17 @@ def block(name, item, user):
             os.system("printf '\033c'")
             min += 3
             max += 3
-        combination_input = input()
-        if combination_input == number_combination:
-            print(name + " puts up their guard")
+        player_input = input()
+        os.system("printf '\033c'")
+        if " " in player_input:
+            player_input = player_input.replace(" ", "")
+        if player_input == numbers:
+            print(name + " puts up their guard.")
             return True
         else:
-            print(name + " spaces out")
+            print(name + " leaves themself exposed.")
     else:
-        print(name + " puts up their guard")
+        print(rank + " " + name + " puts up their guard.")
         return True
 
 
@@ -63,4 +68,4 @@ def run(name):
     if run_chance == 1:
         return True
     else:
-        print("..but fails")
+        print("..but fails.")

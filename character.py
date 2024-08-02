@@ -1,4 +1,5 @@
 import random
+from enemy_data_pool import *
 
 
 class Character():
@@ -29,12 +30,26 @@ class Character():
     
     def get_max_hp(self):
         return self.max_hp
-    
-    def char_describe(self):
-        print("\nRoom Character:")
-        print(self.name + " is here.")
 
-    def generate_enemy(self, name_pool, weapon_pool, enemy_max_hp):
-        self.name = random.choice(name_pool)
+class Enemy(Character):
+    def __init__(self, character_name, character_weapon, character_max_hp, character_rank):
+        self.name = character_name
+        self.weapon = character_weapon
+        self.max_hp = character_max_hp
+        self.rank = character_rank
+
+    def get_rank(self):
+        return self.rank
+    
+    def enemy_describe(self):
+        print(self.rank + " " + self.name + " is here.\n")
+
+    def begin_fight(self):
+        print("You engage in a fight with " + self.rank, self.name + ".")
+        print(self.name + ": " + random.choice(get_dialogue_pool()) + "\n")
+
+    def generate_enemy(self, weapon_pool):
+        self.name = random.choice(get_name_pool())
         self.weapon = random.choice(weapon_pool)
-        self.max_hp = enemy_max_hp
+        self.max_hp = random.randint(75, 100)
+        self.rank = random.choice(get_rank_pool())

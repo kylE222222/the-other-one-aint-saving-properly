@@ -30,14 +30,19 @@ class Room:
 
     def get_details(self):
         print(self.name)
-        print("-----")
+        print("-----------------------")
         if self.description != None:
             print(self.description)
         print("\nLinked Rooms:")
         for direction in self.linked_rooms:
             room = self.linked_rooms[direction]
-            print("The " + room.get_name() + " is " + direction)
+            print(room.get_name() + " is " + direction)
+        print("\n")
 
     def move(self, direction):
         if direction in self.linked_rooms:
+            text = "You move to " + self.linked_rooms[direction].get_name() + "."
+            if "The" in text:
+                text = text.replace("The", "the")
+            print(text)
             return self.linked_rooms[direction]

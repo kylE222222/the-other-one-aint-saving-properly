@@ -11,8 +11,10 @@ class Item():
         return self.description
     
     def item_describe(self): 
-        print("\nRoom Item:")
-        print ("A " + self.name + " is here - " + self.description) 
+        text = "A " + self.name + " is here - " + self.description + "\n"
+        if self.name == "Data Crystal":
+            text = text.replace("A", "The")
+        print(text)
     
 
 class Weapon(Item):
@@ -39,7 +41,7 @@ class Heal(Item):
         return self.heal_amount
 
     def use_heal(self, name):
-        print(name + " uses the " + self.name + " and restores " + str(self.heal_amount) + " hp.")
+        print(name + " uses the " + self.name + " and restores " + str(self.heal_amount) + " HP.")
 
 
 class Support(Item):
