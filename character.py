@@ -33,7 +33,7 @@ class Character():
 
 class Enemy(Character):
     def __init__(self, character_name, character_weapon, character_max_hp, character_rank):
-        super().__init__(self, character_name, character_weapon, character_max_hp)
+        super().__init__(character_name, character_weapon, character_max_hp)
         self.rank = character_rank
 
     def get_rank(self):
